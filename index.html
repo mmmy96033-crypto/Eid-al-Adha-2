@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>عيد الأضحى المبارك</title>
+
+<!-- تحسين المشاركة -->
+<meta property="og:title" content="كل سنه وأنتم طيبين ">
+<meta property="og:description" content="ادخل اسمك وشوف مفاجأة العيد">
+<meta property="og:image" content="https://i.supaimg.com/965e0c3e-50d9-4ba0-97dc-487d00fde583/df4e845a-12cb-4ab6-923b-69d55d85a617.jpg">
+<meta property="og:type" content="website">
+
+<link rel="stylesheet" href="style.css">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  
+<!-- صوت -->
+<audio id="music" src="music.mp3" loop></audio>
+
+
+<!-- شاشة البداية -->
+<div class="screen active" id="startScreen">
+
+  <div class="sheepBox">
+    <!-- SVG الخروف -->
+    <svg width="220" height="220" viewBox="0 0 200 200">
+      <ellipse cx="100" cy="115" rx="55" ry="40" fill="#fff"/>
+      <circle cx="70" cy="95" r="18" fill="#f8f8f8"/>
+      <circle cx="100" cy="85" r="20" fill="#f8f8f8"/>
+      <circle cx="130" cy="95" r="18" fill="#f8f8f8"/>
+      <circle cx="85" cy="120" r="18" fill="#f8f8f8"/>
+      <circle cx="115" cy="120" r="18" fill="#f8f8f8"/>
+
+      <circle cx="100" cy="65" r="28" fill="#e5e5e5"/>
+      <ellipse cx="78" cy="65" rx="8" ry="14" fill="#d9d9d9"/>
+      <ellipse cx="122" cy="65" rx="8" ry="14" fill="#d9d9d9"/>
+
+      <circle cx="92" cy="65" r="4" fill="#111"/>
+      <circle cx="108" cy="65" r="4" fill="#111"/>
+
+      <ellipse cx="100" cy="78" rx="6" ry="4" fill="#333"/>
+
+      <rect x="70" y="145" width="8" height="30" fill="#111"/>
+      <rect x="90" y="145" width="8" height="30" fill="#111"/>
+      <rect x="110" y="145" width="8" height="30" fill="#111"/>
+      <rect x="130" y="145" width="8" height="30" fill="#111"/>
+
+      <circle cx="150" cy="115" r="6" fill="#f2f2f2"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family: 'Cairo', sans-serif;">عيد أضحى مبارك </h2>
+    <div class="inputBox">
+      <span>👤</span>
+      <input type="text" id="nameInput" placeholder=" أدخل إسمك ثنائي ">
+    </div>
+  
+  
+  <div class="genderBox">
+
+  <label class="genderBtn">
+    <input type="radio" name="gender" value="boy" checked>
+    <div class="iconBox boy">
+      <i class="fa-solid fa-child"></i>
+    </div>
+    <span>ولد</span>
+  </label>
+
+  <label class="genderBtn">
+    <input type="radio" name="gender" value="girl">
+    <div class="iconBox girl">
+      <i class="fa-solid fa-child-dress"></i>
+    </div>
+    <span>بنت</span>
+  </label>
+
+</div>
+  
+  
+  
+      <button onclick="start()" style="font-family: 'Cairo', sans-serif;">مفاجأة</button>
+  </div>
+</div>
+
+<!-- شاشة التحميل -->
+<div class="screen" id="loadingScreen">
+  <div class="loader"></div>
+  <p>....جاري التحميل</p>
+</div>
+
+<!-- الشاشة الثانية -->
+<div class="screen" id="homeScreen">
+
+  <div class="bigCard">
+
+   <h4 id="welcome" class="title"></h4>
+
+<div class="underline"></div>
+
+<p id="message" class="message"></p>
+
+  </div>
+
+  <!-- خرفان ساقطة -->
+  <div class="sheepRain" id="sheepRain"></div>
+  
+  
+  <!-- Footer -->
+<div class="footer">
+
+  <p class="devName">Developed by Yasser Ayman</p>
+
+  <p class="followText">Visit my pages & follow me</p>
+
+  <div class="icons">
+
+    <!-- Telegram -->
+    <a href="https://t.me/+201152962834" target="_blank">
+      <i class="fa-brands fa-telegram"></i>
+    </a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/share/18JKd6iggQ/" target="_blank">
+      <i class="fa-brands fa-facebook"></i>
+    </a>
+
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@engineering473?_r=1&_t=ZS-96ZyZlb53vo" target="_blank">
+      <i class="fa-brands fa-tiktok"></i>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/+201152962834?text=Hello%20Yasser%20👋" target="_blank">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/x_y_ayman_x?igsh=MWExM2Fmd2tjeWQ4bA==" target="_blank">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+
+  </div>
+
+</div>
+
+</div>
+
+
+
+<script>
+function start(){
+
+let name = document.getElementById("nameInput").value;
+if(name === "") return;
+
+/* نوع المستخدم */
+let gender = document.querySelector('input[name="gender"]:checked').value;
+
+/* تشغيل الموسيقى */
+let music = document.getElementById("music");
+music.play();
+
+/* تحميل */
+document.getElementById("startScreen").classList.remove("active");
+document.getElementById("loadingScreen").classList.add("active");
+
+setTimeout(()=>{
+
+document.getElementById("loadingScreen").classList.remove("active");
+document.getElementById("homeScreen").classList.add("active");
+
+/* تكبيرات */
+music.src = "fy.mp3";
+music.loop = true;
+music.play();
+
+/* اسم */
+document.getElementById("welcome").innerText =
+"  " + name + " ";
+
+/* رسالة حسب النوع */
+let message = "";
+
+if(gender === "boy"){
+message = "ڪـل سنة وانت طيب يا " + name + " ربنا يجعله عيد فرح وسعادة عليك وعلى قلبك ويحقق لك فيه ڪل اللي تتمناه ويڪتب لك أيام أجمل من اللي فاتت يارب يڪون العيد ده بداية خير جديد ليك وتفضل دايمًا بخير وراحة بال ونجاح في ڪل خطواتك وڪل سنة وانت طيب وربنا يديم عليك الضحڪة والفرحة 🤍\nصلّوا على النبي ﷺ 🌿 ";
+}else{
+message = "ڪـل سنة وانتي طيبة يا " + name + "  عيد سعيد عليڪي يا جميلة ربنا يخلي أيامك ڪلها فرح وراحة بال ويحقق لكِ ڪل اللي بتتمنيه ويڪتب لكِ بداية أجمل في ڪل حاجة جاية في حياتك إن شاء الله يڪون العيد ده مليان سعادة وضحك وطمأنينة لقلبك وتفضلي دايمًا بخير وفي أحسن حال ڪـل سنة وإنتِ طيبة وعيدك مبارك 🌸\n صلّوا على النبي ﷺ 🌿   ";
+}
+
+document.getElementById("message").innerText = message;
+
+/* خرفان */
+startSheepRain();
+
+},24000);
+
+}
+
+function startSheepRain(){
+
+const container = document.getElementById("sheepRain");
+
+setInterval(()=>{
+
+let sheep = document.createElement("div");
+sheep.classList.add("sheep");
+
+/* لو عندك صورة PNG تقدر تبدلها هنا */
+sheep.innerHTML = "🐑";
+
+sheep.style.left = Math.random() * 100 + "vw";
+
+/* سرعة مختلفة لكل واحد */
+sheep.style.animationDuration = (4 + Math.random() * 4) + "s";
+
+/* حجم مختلف */
+sheep.style.fontSize = (14 + Math.random() * 26) + "px";
+
+/* تأخير بسيط عشان يبقوا طبيعيين */
+sheep.style.opacity = Math.random() * 0.8 + 0.2;
+
+container.appendChild(sheep);
+
+/* حذف بعد الانتهاء */
+setTimeout(()=>sheep.remove(),8000);
+
+},300); // كثافة الخرفان
+
+}
+  </script>
+</body>
+</html>

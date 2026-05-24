@@ -1,0 +1,380 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:tahoma;
+}
+
+body{
+height:100vh;
+background:linear-gradient(135deg,#0f172a,#1e293b,#312e81);
+overflow:hidden;
+}
+
+/* الشاشات */
+.screen{
+position:absolute;
+width:100%;
+height:100%;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+color:white;
+}
+
+.active{
+display:flex;
+}
+
+/* الخروف */
+.sheepBox{
+margin-bottom:20px;
+animation:float 3s infinite ease-in-out;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+}
+
+/* الكارت */
+.card{
+width:90%;
+max-width:380px;
+padding:25px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+text-align:center;
+position:relative;
+top:-40px; /* عشان الكيبورد */
+}
+
+/* input */
+.inputBox{
+display:flex;
+align-items:center;
+background:rgba(255,255,255,0.15);
+padding:12px;
+border-radius:12px;
+margin:15px 0;
+}
+
+.inputBox span{
+margin-left:10px;
+}
+
+input{
+width:100%;
+background:transparent;
+border:none;
+outline:none;
+color:white;
+font-size:16px;
+}
+
+/* button */
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:#6366f1;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#4f46e5;
+}
+
+/* loader */
+.loader{
+width:50px;
+height:50px;
+border:5px solid rgba(255,255,255,0.2);
+border-top:5px solid white;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-bottom:15px;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg);}
+}
+
+/* responsive */
+@media(max-width:600px){
+.card{top:-20px}
+}
+
+/* الصندوق الكبير */
+.bigCard{
+width:90%;
+max-width:500px;
+padding:30px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+border-radius:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.4);
+text-align:center;
+color:white;
+animation:floatBox 4s ease-in-out infinite;
+position:relative;
+z-index:2;
+}
+
+/* حركة خفيفة */
+@keyframes floatBox{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-12px)}
+}
+
+/* رسالة */
+#message{
+margin-top:15px;
+font-size:18px;
+opacity:0.9;
+line-height:1.6;
+}
+
+/* سقوط الخرفان */
+.sheepRain{
+position:absolute;
+width:100%;
+height:100%;
+top:0;
+left:0;
+overflow:hidden;
+z-index:1;
+pointer-events:none;
+}
+
+.sheep{
+position:absolute;
+top:-50px;
+font-size:24px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh) rotate(360deg);
+opacity:0;
+}
+}
+
+.inputBox{
+display:flex;
+align-items:center;
+background:rgba(255,255,255,0.15);
+padding:14px;
+border-radius:14px;
+margin:15px 0;
+direction: rtl;
+}
+
+.inputBox span{
+margin-left:10px;
+font-size:18px;
+}
+
+input{
+width:100%;
+background:transparent;
+border:none;
+outline:none;
+color:white;
+font-size:18px; /* تكبير الخط */
+text-align:right; /* الكتابة من اليمين */
+font-family: 'Cairo', sans-serif;
+}
+
+/* الخط الكبير (أهلاً) */
+.title{
+font-size:25px;
+font-weight:bold;
+margin-bottom:8px;
+letter-spacing:1px;
+}
+
+/* الخط اللي تحت (خط فاصل جميل) */
+.underline{
+width:120px;
+height:3px;
+margin:0 auto 15px auto;
+background:linear-gradient(90deg,#fff,transparent,#fff);
+border-radius:50px;
+opacity:0.7;
+}
+
+/* الرسالة */
+.message{
+font-size:16px;
+opacity:0.85;
+line-height:1.7;
+}
+
+/* تقدر تغير الخطين بسهولة */
+.title{
+font-family: 'Cairo', sans-serif;
+}
+
+.message{
+font-family:'IBM Plex Sans Arabic', sans-serif;
+}
+
+
+
+
+.genderBox{
+display:flex;
+justify-content:space-between;
+gap:10px;
+margin:15px 0;
+}
+
+.genderBtn{
+flex:1;
+cursor:pointer;
+position:relative;
+}
+
+.genderBtn input{
+display:none;
+}
+
+/* الصندوق */
+.iconBox{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,0.1);
+padding:15px;
+border-radius:15px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:8px;
+transition:0.3s;
+color:white;
+box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* الأيقونة */
+.iconBox i{
+font-size:22px;
+}
+
+/* hover */
+.genderBtn:hover .iconBox{
+transform:translateY(-3px);
+}
+
+/* لما يتحدد */
+.genderBtn input:checked + .iconBox{
+background:linear-gradient(135deg,#6366f1,#3b82f6);
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(99,102,241,0.5);
+}
+
+/* النص */
+.genderBtn span{
+font-size:13px;
+opacity:0.9;
+font-family: 'Cairo', sans-serif;
+} 
+
+
+
+
+
+
+.sheepRain{
+position:absolute;
+width:100%;
+height:100%;
+top:0;
+left:0;
+overflow:hidden;
+z-index:1;
+pointer-events:none;
+}
+
+/* شكل الخروف */
+.sheep{
+position:absolute;
+top:-60px;
+font-size:22px;
+opacity:0.9;
+animation:fallSmooth linear forwards;
+filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+}
+
+@keyframes fallSmooth{
+0%{
+transform:translateY(0) translateX(0) rotate(0deg);
+opacity:0;
+}
+
+10%{
+opacity:1;
+}
+
+100%{
+transform:translateY(110vh) translateX(40px) rotate(360deg);
+opacity:0;
+}
+} 
+
+.footer{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+padding:12px 10px;
+background:rgba(0,0,0,0.25);
+backdrop-filter:blur(12px);
+text-align:center;
+color:white;
+z-index:999;
+}
+
+.devName{
+font-size:14px;
+font-weight:bold;
+margin-bottom:3px;
+font-family:'Amiri', serif;
+}
+
+.followText{
+font-size:12px;
+opacity:0.8;
+margin-bottom:8px;
+font-family:'Amiri', serif;
+
+}
+
+/* الأيقونات */
+.icons{
+display:flex;
+justify-content:center;
+gap:18px;
+}
+
+.icons a{
+color:white;
+font-size:18px;
+transition:0.3s;
+}
+
+.icons a:hover{
+transform:translateY(-3px) scale(1.2);
+color:#60a5fa;
+} 
+
+
