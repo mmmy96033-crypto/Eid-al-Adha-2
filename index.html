@@ -18,6 +18,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- ستايل نظام التعليقات -->
+<style>
+  .cmt-close-btn{
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,0.1); border:none; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:background .2s;
+  }
+  .cmt-close-btn:hover{ background:rgba(255,255,255,0.2); }
+
+  .cmt-anon-toggle{
+    display:flex; align-items:center; gap:6px; cursor:pointer;
+    color:#9aa3c7; font-size:12px; font-family:'Cairo', sans-serif; white-space:nowrap;
+  }
+  .cmt-anon-toggle input{ display:none; }
+  .cmt-anon-toggle .slider{
+    width:34px; height:20px; background:rgba(255,255,255,0.15);
+    border-radius:20px; position:relative; transition:background .2s; flex-shrink:0;
+  }
+  .cmt-anon-toggle .slider::before{
+    content:''; position:absolute; width:16px; height:16px; border-radius:50%;
+    background:#fff; top:2px; right:2px; transition:right .2s;
+  }
+  .cmt-anon-toggle input:checked + .slider{ background:#7b5bf5; }
+  .cmt-anon-toggle input:checked + .slider::before{ right:16px; }
+
+  .cmt-card{
+    background:rgba(255,255,255,0.06); padding:12px 14px; border-radius:14px;
+  }
+  .cmt-reply-card{
+    margin-top:8px; margin-right:20px; background:rgba(255,255,255,0.06);
+    padding:10px 12px; border-radius:12px;
+  }
+  .cmt-delete-btn{
+    background:none; border:none; color:#6b7399; cursor:pointer; padding:2px;
+    display:inline-flex; align-items:center; transition:color .2s;
+  }
+  .cmt-delete-btn:hover{ color:#ef4444; }
+  .cmt-action-btn{
+    background:none; border:none; color:#8b93c9; font-size:12px; cursor:pointer;
+    padding:0; font-family:'Cairo', sans-serif; margin-left:12px;
+  }
+  .cmt-reply-box{
+    display:none; margin-top:10px; background:rgba(0,0,0,0.15);
+    padding:10px; border-radius:12px;
+  }
+  .cmt-showmore-btn{
+    background:none; border:none; color:#7b8fff; font-size:12px; cursor:pointer;
+    padding:6px 0 0; font-family:'Cairo', sans-serif;
+  }
+</style>
+
 </head>
 
 <body>
@@ -90,9 +143,8 @@
       <button onclick="start()" style="font-family: 'Cairo', sans-serif;">مفاجأة</button>
   </div>
   
- <!-- ==== كود عداد زوار الموقع - يتحط قبل </body> ==== -->
+ <!-- ==== كود عداد زوار الموقع ==== -->
 
-<!-- 1) أيقونة العين والعداد - غيّر مكانها بالـ CSS تحت -->
 <div id="visitor-counter-box" style="
   position: fixed;
   top: 15px;
@@ -116,12 +168,7 @@
   <span id="visitor-count">...</span>
 </div>
 
-  <!-- =========================================================
-     نظام التعليقات - انسخ الأجزاء الثلاثة في أماكنها المطلوبة
-     ========================================================= -->
-
-<!-- ============ الجزء 1: أيقونة التعليقات ============
-     حطها جنب أيقونة العين (نفس المكان اللي فيه visitor-counter-box) -->
+<!-- ============ أيقونة التعليقات ============ -->
 
 <div id="comments-icon-box" style="
   position: fixed;
@@ -160,8 +207,7 @@
   ">0</span>
 </div>
 
-<!-- ============ الجزء 2: نافذة التعليقات ============
-     حطها في أي مكان في الـ body (قبل الـ script مثلاً) -->
+<!-- ============ نافذة التعليقات ============ -->
 
 <div id="comments-modal" style="
   display: none;
@@ -194,16 +240,12 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
     ">
       <h3 style="color:#fff; margin:0; font-size:18px;">التعليقات</h3>
-      <button onclick="closeComments()" style="
-        background: rgba(255,255,255,0.1);
-        border: none;
-        color: #fff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        font-size: 18px;
-        cursor: pointer;
-      ">✕</button>
+      <button onclick="closeComments()" class="cmt-close-btn" aria-label="إغلاق">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="5" y1="5" x2="19" y2="19"/>
+          <line x1="19" y1="5" x2="5" y2="19"/>
+        </svg>
+      </button>
     </div>
 
     <!-- قائمة التعليقات -->
@@ -224,7 +266,7 @@
       border-top: 1px solid rgba(255,255,255,0.1);
       background: rgba(0,0,0,0.15);
     ">
-      <div id="name-row" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
         <input id="commenter-name" type="text" placeholder="اسمك"
           style="
             flex:1;
@@ -236,8 +278,9 @@
             font-family: 'Cairo', sans-serif;
             font-size: 14px;
           ">
-        <label style="color:#9aa3c7; font-size:12px; display:flex; align-items:center; gap:4px; white-space:nowrap;">
-          <input type="checkbox" id="anon-check" onchange="toggleAnon()">
+        <label class="cmt-anon-toggle">
+          <input type="checkbox" id="anon-check" onchange="toggleAnonScope('commenter-name','anon-check')">
+          <span class="slider"></span>
           مجهول
         </label>
       </div>
@@ -436,20 +479,16 @@ async function updateVisitorCount(){
       "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
     );
 
-    /* هات أو اعمل معرف فريد لهذا الجهاز/المتصفح */
     let visitorId = localStorage.getItem('visitorId');
     if(!visitorId){
       visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substring(2, 12);
       localStorage.setItem('visitorId', visitorId);
     }
 
-    /* نحاول نسجل الزائر ده - لو مسجل قبل كده هيتجاهل تلقائياً */
     await supabaseClient
       .from('unique_visitors')
       .insert({ visitor_id: visitorId });
-    /* ملاحظة: هيرجع خطأ لو الـ id مكرر، وده متوقع وطبيعي، فمش هنوقف عنده */
 
-    /* نجيب العدد الحالي = عدد الصفوف في الجدول */
     const { count, error: countError } = await supabaseClient
       .from('unique_visitors')
       .select('*', { count: 'exact', head: true });
@@ -464,18 +503,21 @@ async function updateVisitorCount(){
   }
 }
 
-/* تشغيل العداد أول ما الصفحة تفتح */
 updateVisitorCount();
 
 
-/* ==== نظام التعليقات - Supabase ==== */
+/* ============================================================
+   نظام التعليقات - النسخة المحسّنة
+   ============================================================ */
 
 const commentsSupabase = window.supabase.createClient(
   "https://mlujsnxdxafrfzykqzlh.supabase.co",
   "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
 );
 
-let allCommentsCache = [];
+let commentsCache = [];
+let repliesCache = [];
+let expandedComments = new Set();
 
 /* --- فتح وقفل النافذة --- */
 function openComments(){
@@ -490,10 +532,10 @@ function closeComments(){
 
 document.getElementById('comments-icon-box').addEventListener('click', openComments);
 
-/* --- زر "مجهول" --- */
-function toggleAnon(){
-  const nameInput = document.getElementById('commenter-name');
-  const isAnon = document.getElementById('anon-check').checked;
+/* --- تفعيل/إلغاء وضع المجهول لأي صندوق (رئيسي أو رد) --- */
+function toggleAnonScope(nameInputId, checkboxId){
+  const nameInput = document.getElementById(nameInputId);
+  const isAnon = document.getElementById(checkboxId).checked;
   nameInput.disabled = isAnon;
   nameInput.style.opacity = isAnon ? 0.4 : 1;
 }
@@ -507,7 +549,14 @@ function timeAgo(dateStr){
   return Math.floor(diff/86400) + " يوم";
 }
 
-/* --- تحميل كل التعليقات والردود --- */
+/* --- منع أكواد HTML ضارة --- */
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* --- تحميل البيانات من القاعدة --- */
 async function loadComments(){
   const listEl = document.getElementById('comments-list');
 
@@ -526,70 +575,133 @@ async function loadComments(){
 
     if(rErr) throw rErr;
 
-    allCommentsCache = comments || [];
+    commentsCache = comments || [];
+    repliesCache = replies || [];
 
-    if(!comments || comments.length === 0){
-      listEl.innerHTML = '<p style="color:#9aa3c7; text-align:center; margin-top:20px;">لسه مفيش تعليقات، كن أول من يعلق 🌙</p>';
-      return;
-    }
-
-    listEl.innerHTML = comments.map(c => {
-      const myReplies = (replies || []).filter(r => r.comment_id === c.id);
-
-      const repliesHtml = myReplies.map(r => `
-        <div style="margin-top:8px; margin-right:20px; background:rgba(255,255,255,0.06); padding:10px 12px; border-radius:12px;">
-          <div style="display:flex; justify-content:space-between;">
-            <span style="color:#a5b4fc; font-weight:700; font-size:13px;">${escapeHtml(r.name)}</span>
-            <span style="color:#6b7399; font-size:11px;">${timeAgo(r.created_at)}</span>
-          </div>
-          <p style="color:#e5e7ff; margin:4px 0 0; font-size:13px;">${escapeHtml(r.message)}</p>
-        </div>
-      `).join('');
-
-      return `
-        <div style="background:rgba(255,255,255,0.06); padding:12px 14px; border-radius:14px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:#fff; font-weight:700; font-size:14px;">${escapeHtml(c.name)}</span>
-            <span style="color:#6b7399; font-size:12px;">${timeAgo(c.created_at)}</span>
-          </div>
-          <p style="color:#e5e7ff; margin:6px 0; font-size:14px;">${escapeHtml(c.message)}</p>
-          <button onclick="showReplyBox(${c.id})" style="
-            background:none; border:none; color:#8b93c9; font-size:12px; cursor:pointer; padding:0;
-            font-family:'Cairo', sans-serif;
-          ">↩ رد</button>
-          <div id="reply-box-${c.id}" style="display:none; margin-top:8px; gap:6px;">
-            <div style="display:flex; gap:6px;">
-              <input type="text" id="reply-input-${c.id}" placeholder="اكتب ردك..." style="
-                flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
-                color:#fff; padding:8px 12px; border-radius:10px; font-family:'Cairo', sans-serif; font-size:13px;
-              ">
-              <button onclick="submitReply(${c.id})" style="
-                background:linear-gradient(90deg,#5b6ef5,#7b5bf5); border:none; color:#fff;
-                padding:0 14px; border-radius:10px; cursor:pointer; font-size:13px; font-family:'Cairo', sans-serif;
-              ">إرسال</button>
-            </div>
-          </div>
-          ${repliesHtml}
-        </div>
-      `;
-    }).join('');
+    renderCommentsList();
 
   } catch(err){
     listEl.innerHTML = '<p style="color:#f87171; text-align:center;">خطأ: ' + (err.message || JSON.stringify(err)) + '</p>';
   }
 }
 
-/* --- منع أكواد HTML ضارة --- */
-function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+/* --- عرض التعليقات من الكاش (بدون إعادة تحميل) --- */
+function renderCommentsList(){
+  const listEl = document.getElementById('comments-list');
+
+  if(commentsCache.length === 0){
+    listEl.innerHTML = '<p style="color:#9aa3c7; text-align:center; margin-top:20px;">لسه مفيش تعليقات، كن أول من يعلق 🌙</p>';
+    return;
+  }
+
+  listEl.innerHTML = commentsCache.map(c => renderComment(c)).join('');
 }
 
-/* --- إظهار صندوق الرد --- */
-function showReplyBox(commentId){
+function renderComment(c){
+  const myReplies = repliesCache.filter(r => r.comment_id === c.id);
+  const expanded = expandedComments.has(c.id);
+  const visibleReplies = expanded ? myReplies : myReplies.slice(0, 2);
+  const hiddenCount = myReplies.length - visibleReplies.length;
+
+  const repliesHtml = visibleReplies.map(r => renderReply(r, c.id)).join('');
+
+  let moreBtn = '';
+  if(hiddenCount > 0){
+    moreBtn = `<button class="cmt-showmore-btn" onclick="toggleShowMore(${c.id})">عرض ${hiddenCount} رد إضافي</button>`;
+  } else if(expanded && myReplies.length > 2){
+    moreBtn = `<button class="cmt-showmore-btn" onclick="toggleShowMore(${c.id})">إخفاء الردود</button>`;
+  }
+
+  return `
+    <div class="cmt-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:#fff; font-weight:700; font-size:14px;">${escapeHtml(c.name)}</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="color:#6b7399; font-size:12px;">${timeAgo(c.created_at)}</span>
+          <button class="cmt-delete-btn" onclick="deleteComment(${c.id})" title="حذف">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p style="color:#e5e7ff; margin:6px 0; font-size:14px;">${escapeHtml(c.message)}</p>
+      <button class="cmt-action-btn" onclick="openReplyBox(${c.id})">↩ رد</button>
+
+      <div id="reply-box-${c.id}" class="cmt-reply-box">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <input type="text" id="reply-name-${c.id}" placeholder="اسمك" style="
+            flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+            color:#fff; padding:8px 12px; border-radius:10px; font-family:'Cairo', sans-serif; font-size:13px;
+          ">
+          <label class="cmt-anon-toggle">
+            <input type="checkbox" id="reply-anon-${c.id}" onchange="toggleAnonScope('reply-name-${c.id}','reply-anon-${c.id}')">
+            <span class="slider"></span>
+            مجهول
+          </label>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="reply-input-${c.id}" placeholder="اكتب ردك..." style="
+            flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+            color:#fff; padding:8px 12px; border-radius:10px; font-family:'Cairo', sans-serif; font-size:13px;
+          ">
+          <button onclick="submitReply(${c.id})" style="
+            background:linear-gradient(90deg,#5b6ef5,#7b5bf5); border:none; color:#fff;
+            padding:0 14px; border-radius:10px; cursor:pointer; font-size:13px; font-family:'Cairo', sans-serif;
+          ">إرسال</button>
+        </div>
+      </div>
+
+      ${repliesHtml}
+      ${moreBtn}
+    </div>
+  `;
+}
+
+function renderReply(r, parentCommentId){
+  return `
+    <div class="cmt-reply-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:#a5b4fc; font-weight:700; font-size:13px;">${escapeHtml(r.name)}</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="color:#6b7399; font-size:11px;">${timeAgo(r.created_at)}</span>
+          <button class="cmt-delete-btn" onclick="deleteReply(${r.id}, ${parentCommentId})" title="حذف">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p style="color:#e5e7ff; margin:4px 0 0; font-size:13px;">${escapeHtml(r.message)}</p>
+      <button class="cmt-action-btn" style="margin-top:4px;" onclick="openReplyBox(${parentCommentId}, '${escapeHtml(r.name).replace(/'/g,"")}')">↩ رد</button>
+    </div>
+  `;
+}
+
+/* --- إظهار/تعديل صندوق الرد --- */
+function openReplyBox(commentId, mentionName){
   const box = document.getElementById('reply-box-' + commentId);
-  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  const input = document.getElementById('reply-input-' + commentId);
+
+  box.style.display = 'block';
+
+  if(mentionName){
+    input.value = '@' + mentionName + ' ';
+  }
+
+  input.focus();
+}
+
+/* --- إظهار/إخفاء المزيد من الردود --- */
+function toggleShowMore(commentId){
+  if(expandedComments.has(commentId)){
+    expandedComments.delete(commentId);
+  } else {
+    expandedComments.add(commentId);
+  }
+  renderCommentsList();
 }
 
 /* --- إرسال تعليق جديد --- */
@@ -618,7 +730,7 @@ async function submitComment(){
     if(error) throw error;
 
     textInput.value = "";
-    loadComments();
+    await loadComments();
     markCommentsAsSeen();
 
   } catch(err){
@@ -626,19 +738,23 @@ async function submitComment(){
   }
 }
 
-/* --- إرسال رد على تعليق --- */
+/* --- إرسال رد --- */
 async function submitReply(commentId){
   const input = document.getElementById('reply-input-' + commentId);
-  const message = input.value.trim();
+  const nameInput = document.getElementById('reply-name-' + commentId);
+  const isAnon = document.getElementById('reply-anon-' + commentId).checked;
 
+  const message = input.value.trim();
+  const name = isAnon ? "زائر مجهول" : nameInput.value.trim();
+
+  if(!isAnon && name === ""){
+    alert("اكتب اسمك أو اختر إرسال كمجهول");
+    return;
+  }
   if(message === ""){
     alert("اكتب ردك الأول");
     return;
   }
-
-  const isAnon = document.getElementById('anon-check').checked;
-  const nameInput = document.getElementById('commenter-name');
-  const name = isAnon ? "زائر مجهول" : (nameInput.value.trim() || "زائر مجهول");
 
   try{
     const { error } = await commentsSupabase
@@ -648,11 +764,54 @@ async function submitReply(commentId){
     if(error) throw error;
 
     input.value = "";
-    loadComments();
+    expandedComments.add(commentId);
+    await loadComments();
     markCommentsAsSeen();
 
   } catch(err){
     alert("حصل خطأ: " + (err.message || JSON.stringify(err)));
+  }
+}
+
+/* --- حذف تعليق (بكلمة سر) --- */
+async function deleteComment(commentId){
+  const pass = prompt("أدخل كلمة السر للحذف:");
+  if(pass === null) return;
+
+  try{
+    const { error } = await commentsSupabase.rpc('delete_comment', {
+      target_id: commentId,
+      secret: pass
+    });
+
+    if(error) throw error;
+
+    await loadComments();
+    markCommentsAsSeen();
+
+  } catch(err){
+    alert("كلمة السر غلط أو حصل خطأ");
+  }
+}
+
+/* --- حذف رد (بكلمة سر) --- */
+async function deleteReply(replyId, parentCommentId){
+  const pass = prompt("أدخل كلمة السر للحذف:");
+  if(pass === null) return;
+
+  try{
+    const { error } = await commentsSupabase.rpc('delete_reply', {
+      target_id: replyId,
+      secret: pass
+    });
+
+    if(error) throw error;
+
+    await loadComments();
+    markCommentsAsSeen();
+
+  } catch(err){
+    alert("كلمة السر غلط أو حصل خطأ");
   }
 }
 
@@ -705,8 +864,9 @@ async function markCommentsAsSeen(){
   }
 }
 
-/* تشغيل الشعار أول ما الصفحة تفتح */
+/* تشغيل الشعار أول ما الصفحة تفتح، وتحديثه كل 20 ثانية */
 updateCommentsBadge();
+setInterval(updateCommentsBadge, 20000);
 
 </script>
 
