@@ -276,6 +276,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ==== إضافة: عداد زوار الموقع (Supabase) - زائر واحد لكل جهاز ==== */
 
+/* ==== إضافة: عداد زوار الموقع (Supabase) - نسخة الجدول الفريد ==== */
+
 async function updateVisitorCount(){
 
   const counterEl = document.getElementById('visitor-count');
@@ -292,47 +294,27 @@ async function updateVisitorCount(){
       "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
     );
 
-    /* هل الجهاز ده زار الموقع قبل كده؟ */
-    const alreadyVisited = localStorage.getItem('hasVisitedBefore');
-
-    if(!alreadyVisited){
-      /* زائر جديد -> نزود العداد */
-
-      let { data, error } = await supabaseClient
-        .from('site_visits')
-        .select('count')
-        .eq('id', 1)
-        .single();
-
-      if(error) throw error;
-
-      const newCount = (data.count || 0) + 1;
-
-      const { error: updateError } = await supabaseClient
-        .from('site_visits')
-        .update({ count: newCount })
-        .eq('id', 1);
-
-      if(updateError) throw updateError;
-
-      /* نحط العلامة عشان مانزودش تاني */
-      localStorage.setItem('hasVisitedBefore', 'true');
-
-      counterEl.textContent = newCount;
-
-    } else {
-      /* مش زائر جديد -> بس نجيب الرقم الحالي من غير ما نزوده */
-
-      let { data, error } = await supabaseClient
-        .from('site_visits')
-        .select('count')
-        .eq('id', 1)
-        .single();
-
-      if(error) throw error;
-
-      counterEl.textContent = data.count || 0;
+    /* هات أو اعمل معرف فريد لهذا الجهاز/المتصفح */
+    let visitorId = localStorage.getItem('visitorId');
+    if(!visitorId){
+      visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substring(2, 12);
+      localStorage.setItem('visitorId', visitorId);
     }
+
+    /* نحاول نسجل الزائر ده - لو مسجل قبل كده هيتجاهل تلقائياً */
+    await supabaseClient
+      .from('unique_visitors')
+      .insert({ visitor_id: visitorId });
+    /* ملاحظة: هيرجع خطأ لو الـ id مكرر، وده متوقع وطبيعي، فمش هنوقف عنده */
+
+    /* نجيب العدد الحالي = عدد الصفوف في الجدول */
+    const { count, error: countError } = await supabaseClient
+      .from('unique_visitors')
+      .select('*', { count: 'exact', head: true });
+
+    if(countError) throw countError;
+
+    counterEl.textContent = count;
 
   } catch(err){
     counterEl.textContent = 'خطأ: ' + (err.message || JSON.stringify(err));
