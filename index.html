@@ -96,7 +96,7 @@
 <div id="visitor-counter-box" style="
   position: fixed;
   top: 15px;
-  right: 15px;
+  left: 15px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -272,8 +272,24 @@ const SUPABASE_KEY = "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+/* ==== إضافة: عداد زوار الموقع (Supabase) - نسخة تشخيصية ==== */
+
 async function updateVisitorCount(){
+
+  const counterEl = document.getElementById('visitor-count');
+
   try{
+
+    if(!window.supabase){
+      counterEl.textContent = "مكتبة Supabase مش محملة";
+      return;
+    }
+
+    const supabaseClient = window.supabase.createClient(
+      "https://mlujsnxdxafrfzykqzlh.supabase.co",
+      "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
+    );
+
     let { data, error } = await supabaseClient
       .from('site_visits')
       .select('count')
@@ -291,12 +307,11 @@ async function updateVisitorCount(){
 
     if(updateError) throw updateError;
 
-    document.getElementById('visitor-count').textContent = newCount;
+    counterEl.textContent = newCount;
 
   } catch(err){
-    /* هنعرض الخطأ نفسه بدل النقط عشان نشخص المشكلة */
-    document.getElementById('visitor-count').textContent =
-      'خطأ: ' + (err.message || JSON.stringify(err));
+    counterEl.textContent = 'خطأ: ' + (err.message || JSON.stringify(err));
+    console.error('تفاصيل الخطأ الكامل:', err);
   }
 }
 
