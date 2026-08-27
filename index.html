@@ -274,6 +274,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ==== إضافة: عداد زوار الموقع (Supabase) - نسخة تشخيصية ==== */
 
+/* ==== إضافة: عداد زوار الموقع (Supabase) - زائر واحد لكل جهاز ==== */
+
 async function updateVisitorCount(){
 
   const counterEl = document.getElementById('visitor-count');
@@ -290,24 +292,47 @@ async function updateVisitorCount(){
       "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
     );
 
-    let { data, error } = await supabaseClient
-      .from('site_visits')
-      .select('count')
-      .eq('id', 1)
-      .single();
+    /* هل الجهاز ده زار الموقع قبل كده؟ */
+    const alreadyVisited = localStorage.getItem('hasVisitedBefore');
 
-    if(error) throw error;
+    if(!alreadyVisited){
+      /* زائر جديد -> نزود العداد */
 
-    const newCount = (data.count || 0) + 1;
+      let { data, error } = await supabaseClient
+        .from('site_visits')
+        .select('count')
+        .eq('id', 1)
+        .single();
 
-    const { error: updateError } = await supabaseClient
-      .from('site_visits')
-      .update({ count: newCount })
-      .eq('id', 1);
+      if(error) throw error;
 
-    if(updateError) throw updateError;
+      const newCount = (data.count || 0) + 1;
 
-    counterEl.textContent = newCount;
+      const { error: updateError } = await supabaseClient
+        .from('site_visits')
+        .update({ count: newCount })
+        .eq('id', 1);
+
+      if(updateError) throw updateError;
+
+      /* نحط العلامة عشان مانزودش تاني */
+      localStorage.setItem('hasVisitedBefore', 'true');
+
+      counterEl.textContent = newCount;
+
+    } else {
+      /* مش زائر جديد -> بس نجيب الرقم الحالي من غير ما نزوده */
+
+      let { data, error } = await supabaseClient
+        .from('site_visits')
+        .select('count')
+        .eq('id', 1)
+        .single();
+
+      if(error) throw error;
+
+      counterEl.textContent = data.count || 0;
+    }
 
   } catch(err){
     counterEl.textContent = 'خطأ: ' + (err.message || JSON.stringify(err));
