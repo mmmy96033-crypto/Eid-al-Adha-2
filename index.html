@@ -269,6 +269,685 @@
 </div>
 
 
+</div>
+
+<!-- شاشة التحميل -->
+<div class="screen" id="loadingScreen">
+  <div class="loader"></div>
+  <p>....جاري التحميل</p>
+</div>
+
+<!-- الشاشة الثانية -->
+<div class="screen" id="homeScreen">
+
+  <div class="bigCard">
+
+   <h4 id="welcome" class="title"></h4>
+
+<div class="underline"></div>
+
+<p id="message" class="message"></p>
+
+  </div>
+
+  <!-- خرفان ساقطة -->
+  <div class="sheepRain" id="sheepRain"></div>
+  
+  
+  <!-- Footer -->
+<div class="footer">
+
+  <p class="devName">Developed by Yasser Ayman</p>
+
+  <p class="followText">Visit my pages & follow me</p>
+
+  <div class="icons">
+
+    <!-- Telegram -->
+    <a href="https://t.me/+201152962834" target="_blank">
+      <i class="fa-brands fa-telegram"></i>
+    </a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/share/18JKd6iggQ/" target="_blank">
+      <i class="fa-brands fa-facebook"></i>
+    </a>
+
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@engineering473?_r=1&_t=ZS-96ZyZlb53vo" target="_blank">
+      <i class="fa-brands fa-tiktok"></i>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/+201152962834?text=Hello%20Yasser%20👋" target="_blank">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/x_y_ayman_x?igsh=MWExM2Fmd2tjeWQ4bA==" target="_blank">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+
+  </div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+function start(){
+
+let name = document.getElementById("nameInput").value;
+if(name === "") return;
+
+/* نوع المستخدم */
+let gender = document.querySelector('input[name="gender"]:checked').value;
+
+/* تشغيل الموسيقى */
+let music = document.getElementById("music");
+music.play();
+
+/* تحميل */
+document.getElementById("startScreen").classList.remove("active");
+document.getElementById("loadingScreen").classList.add("active");
+
+setTimeout(()=>{
+
+document.getElementById("loadingScreen").classList.remove("active");
+document.getElementById("homeScreen").classList.add("active");
+
+/* تكبيرات */
+music.src = "fy.mp3";
+music.loop = true;
+music.play();
+
+/* اسم */
+document.getElementById("welcome").innerText =
+"  " + name + " ";
+
+/* رسالة حسب النوع */
+let message = "";
+
+if(gender === "boy"){
+message = "ڪـل سنة وانت طيب يا " + name + " ربنا يجعله عيد فرح وسعادة عليك وعلى قلبك ويحقق لك فيه ڪل اللي تتمناه ويڪتب لك أيام أجمل من اللي فاتت يارب يڪون العيد ده بداية خير جديد ليك وتفضل دايمًا بخير وراحة بال ونجاح في ڪل خطواتك وڪل سنة وانت طيب وربنا يديم عليك الضحڪة والفرحة 🤍\nصلّوا على النبي ﷺ 🌿 ";
+}else{
+message = "ڪـل سنة وانتي طيبة يا " + name + "  عيد سعيد عليڪي يا جميلة ربنا يخلي أيامك ڪلها فرح وراحة بال ويحقق لكِ ڪل اللي بتتمناه ويڪتب لكِ بداية أجمل في ڪل حاجة جاية في حياتك إن شاء الله يڪون العيد ده مليان سعادة وضحك وطمأنينة لقلبك وتفضلي دايمًا بخير وفي أحسن حال ڪـل سنة وإنتِ طيبة وعيدك مبارك 🌸\n صلّوا على النبي ﷺ 🌿   ";
+}
+
+document.getElementById("message").innerText = message;
+
+/* خرفان */
+startSheepRain();
+
+},24000);
+
+}
+
+function startSheepRain(){
+
+const container = document.getElementById("sheepRain");
+
+setInterval(()=>{
+
+let sheep = document.createElement("div");
+sheep.classList.add("sheep");
+
+/* لو عندك صورة PNG تقدر تبدلها هنا */
+sheep.innerHTML = "🐑";
+
+sheep.style.left = Math.random() * 100 + "vw";
+
+/* سرعة مختلفة لكل واحد */
+sheep.style.animationDuration = (4 + Math.random() * 4) + "s";
+
+/* حجم مختلف */
+sheep.style.fontSize = (14 + Math.random() * 26) + "px";
+
+/* تأخير بسيط عشان يبقوا طبيعيين */
+sheep.style.opacity = Math.random() * 0.8 + 0.2;
+
+container.appendChild(sheep);
+
+/* حذف بعد الانتهاء */
+setTimeout(()=>sheep.remove(),8000);
+
+},300); // كثافة الخرفان
+
+}
+
+
+/* ==== إضافة: عداد زوار الموقع (Supabase) - نسخة الجدول الفريد ==== */
+
+async function updateVisitorCount(){
+
+  const counterEl = document.getElementById('visitor-count');
+
+  try{
+
+    if(!window.supabase){
+      counterEl.textContent = "مكتبة Supabase مش محملة";
+      return;
+    }
+
+    const supabaseClient = window.supabase.createClient(
+      "https://mlujsnxdxafrfzykqzlh.supabase.co",
+      "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
+    );
+
+    /* هات أو اعمل معرف فريد لهذا الجهاز/المتصفح */
+    let visitorId = localStorage.getItem('visitorId');
+    if(!visitorId){
+      visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substring(2, 12);
+      localStorage.setItem('visitorId', visitorId);
+    }
+
+    /* نحاول نسجل الزائر ده - لو مسجل قبل كده هيتجاهل تلقائياً */
+    await supabaseClient
+      .from('unique_visitors')
+      .insert({ visitor_id: visitorId });
+    /* ملاحظة: هيرجع خطأ لو الـ id مكرر، وده متوقع وطبيعي، فمش هنوقف عنده */
+
+    /* نجيب العدد الحالي = عدد الصفوف في الجدول */
+    const { count, error: countError } = await supabaseClient
+      .from('unique_visitors')
+      .select('*', { count: 'exact', head: true });
+
+    if(countError) throw countError;
+
+    counterEl.textContent = count;
+
+  } catch(err){
+    counterEl.textContent = 'خطأ: ' + (err.message || JSON.stringify(err));
+    console.error('تفاصيل الخطأ الكامل:', err);
+  }
+}
+
+/* تشغيل العداد أول ما الصفحة تفتح */
+updateVisitorCount();
+
+
+/* ==== نظام التعليقات - Supabase ==== */
+
+const commentsSupabase = window.supabase.createClient(
+  "https://mlujsnxdxafrfzykqzlh.supabase.co",
+  "sb_publishable_hWkdonF5Y3kQQNaOMdMLqw_96kTdZpp"
+);
+
+let allCommentsCache = [];
+
+/* --- فتح وقفل النافذة --- */
+function openComments(){
+  document.getElementById('comments-modal').style.display = 'flex';
+  loadComments();
+  markCommentsAsSeen();
+}
+
+function closeComments(){
+  document.getElementById('comments-modal').style.display = 'none';
+}
+
+document.getElementById('comments-icon-box').addEventListener('click', openComments);
+
+/* --- زر "مجهول" --- */
+function toggleAnon(){
+  const nameInput = document.getElementById('commenter-name');
+  const isAnon = document.getElementById('anon-check').checked;
+  nameInput.disabled = isAnon;
+  nameInput.style.opacity = isAnon ? 0.4 : 1;
+}
+
+/* --- حساب الوقت "منذ..." --- */
+function timeAgo(dateStr){
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if(diff < 60) return "الآن";
+  if(diff < 3600) return Math.floor(diff/60) + " د";
+  if(diff < 86400) return Math.floor(diff/3600) + " س";
+  return Math.floor(diff/86400) + " يوم";
+}
+
+/* --- تحميل كل التعليقات والردود --- */
+async function loadComments(){
+  const listEl = document.getElementById('comments-list');
+
+  try{
+    const { data: comments, error: cErr } = await commentsSupabase
+      .from('comments')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if(cErr) throw cErr;
+
+    const { data: replies, error: rErr } = await commentsSupabase
+      .from('comment_replies')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if(rErr) throw rErr;
+
+    allCommentsCache = comments || [];
+
+    if(!comments || comments.length === 0){
+      listEl.innerHTML = '<p style="color:#9aa3c7; text-align:center; margin-top:20px;">لسه مفيش تعليقات، كن أول من يعلق 🌙</p>';
+      return;
+    }
+
+    listEl.innerHTML = comments.map(c => {
+      const myReplies = (replies || []).filter(r => r.comment_id === c.id);
+
+      const repliesHtml = myReplies.map(r => `
+        <div style="margin-top:8px; margin-right:20px; background:rgba(255,255,255,0.06); padding:10px 12px; border-radius:12px;">
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:#a5b4fc; font-weight:700; font-size:13px;">${escapeHtml(r.name)}</span>
+            <span style="color:#6b7399; font-size:11px;">${timeAgo(r.created_at)}</span>
+          </div>
+          <p style="color:#e5e7ff; margin:4px 0 0; font-size:13px;">${escapeHtml(r.message)}</p>
+        </div>
+      `).join('');
+
+      return `
+        <div style="background:rgba(255,255,255,0.06); padding:12px 14px; border-radius:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:#fff; font-weight:700; font-size:14px;">${escapeHtml(c.name)}</span>
+            <span style="color:#6b7399; font-size:12px;">${timeAgo(c.created_at)}</span>
+          </div>
+          <p style="color:#e5e7ff; margin:6px 0; font-size:14px;">${escapeHtml(c.message)}</p>
+          <button onclick="showReplyBox(${c.id})" style="
+            background:none; border:none; color:#8b93c9; font-size:12px; cursor:pointer; padding:0;
+            font-family:'Cairo', sans-serif;
+          ">↩ رد</button>
+          <div id="reply-box-${c.id}" style="display:none; margin-top:8px; gap:6px;">
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="reply-input-${c.id}" placeholder="اكتب ردك..." style="
+                flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+                color:#fff; padding:8px 12px; border-radius:10px; font-family:'Cairo', sans-serif; font-size:13px;
+              ">
+              <button onclick="submitReply(${c.id})" style="
+                background:linear-gradient(90deg,#5b6ef5,#7b5bf5); border:none; color:#fff;
+                padding:0 14px; border-radius:10px; cursor:pointer; font-size:13px; font-family:'Cairo', sans-serif;
+              ">إرسال</button>
+            </div>
+          </div>
+          ${repliesHtml}
+        </div>
+      `;
+    }).join('');
+
+  } catch(err){
+    listEl.innerHTML = '<p style="color:#f87171; text-align:center;">خطأ: ' + (err.message || JSON.stringify(err)) + '</p>';
+  }
+}
+
+/* --- منع أكواد HTML ضارة --- */
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* --- إظهار صندوق الرد --- */
+function showReplyBox(commentId){
+  const box = document.getElementById('reply-box-' + commentId);
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+/* --- إرسال تعليق جديد --- */
+async function submitComment(){
+  const isAnon = document.getElementById('anon-check').checked;
+  const nameInput = document.getElementById('commenter-name');
+  const textInput = document.getElementById('comment-text');
+
+  const name = isAnon ? "زائر مجهول" : nameInput.value.trim();
+  const message = textInput.value.trim();
+
+  if(!isAnon && name === ""){
+    alert("من فضلك اكتب اسمك، أو اختر إرسال كمجهول");
+    return;
+  }
+  if(message === ""){
+    alert("اكتب تعليقك الأول");
+    return;
+  }
+
+  try{
+    const { error } = await commentsSupabase
+      .from('comments')
+      .insert({ name: name, message: message });
+
+    if(error) throw error;
+
+    textInput.value = "";
+    loadComments();
+    markCommentsAsSeen();
+
+  } catch(err){
+    alert("حصل خطأ: " + (err.message || JSON.stringify(err)));
+  }
+}
+
+/* --- إرسال رد على تعليق --- */
+async function submitReply(commentId){
+  const input = document.getElementById('reply-input-' + commentId);
+  const message = input.value.trim();
+
+  if(message === ""){
+    alert("اكتب ردك الأول");
+    return;
+  }
+
+  const isAnon = document.getElementById('anon-check').checked;
+  const nameInput = document.getElementById('commenter-name');
+  const name = isAnon ? "زائر مجهول" : (nameInput.value.trim() || "زائر مجهول");
+
+  try{
+    const { error } = await commentsSupabase
+      .from('comment_replies')
+      .insert({ comment_id: commentId, name: name, message: message });
+
+    if(error) throw error;
+
+    input.value = "";
+    loadComments();
+    markCommentsAsSeen();
+
+  } catch(err){
+    alert("حصل خطأ: " + (err.message || JSON.stringify(err)));
+  }
+}
+
+/* --- إدارة شعار التعليقات الجديدة --- */
+async function updateCommentsBadge(){
+  try{
+    const { count: commentsCount } = await commentsSupabase
+      .from('comments')
+      .select('*', { count: 'exact', head: true });
+
+    const { count: repliesCount } = await commentsSupabase
+      .from('comment_replies')
+      .select('*', { count: 'exact', head: true });
+
+    const total = (commentsCount || 0) + (repliesCount || 0);
+    const lastSeen = parseInt(localStorage.getItem('commentsLastSeen') || '0');
+
+    const badge = document.getElementById('comments-badge');
+    const newCount = total - lastSeen;
+
+    if(newCount > 0){
+      badge.style.display = 'flex';
+      badge.textContent = newCount > 99 ? '99+' : newCount;
+    } else {
+      badge.style.display = 'none';
+    }
+
+  } catch(err){
+    console.error('خطأ في تحديث شعار التعليقات:', err);
+  }
+}
+
+async function markCommentsAsSeen(){
+  try{
+    const { count: commentsCount } = await commentsSupabase
+      .from('comments')
+      .select('*', { count: 'exact', head: true });
+
+    const { count: repliesCount } = await commentsSupabase
+      .from('comment_replies')
+      .select('*', { count: 'exact', head: true });
+
+    const total = (commentsCount || 0) + (repliesCount || 0);
+    localStorage.setItem('commentsLastSeen', total);
+
+    document.getElementById('comments-badge').style.display = 'none';
+
+  } catch(err){
+    console.error('خطأ:', err);
+  }
+}
+
+/* تشغيل الشعار أول ما الصفحة تفتح */
+updateCommentsBadge();
+
+</script>
+
+
+</body>
+</html>
+      <circle cx="100" cy="85" r="20" fill="#f8f8f8"/>
+      <circle cx="130" cy="95" r="18" fill="#f8f8f8"/>
+      <circle cx="85" cy="120" r="18" fill="#f8f8f8"/>
+      <circle cx="115" cy="120" r="18" fill="#f8f8f8"/>
+
+      <circle cx="100" cy="65" r="28" fill="#e5e5e5"/>
+      <ellipse cx="78" cy="65" rx="8" ry="14" fill="#d9d9d9"/>
+      <ellipse cx="122" cy="65" rx="8" ry="14" fill="#d9d9d9"/>
+
+      <circle cx="92" cy="65" r="4" fill="#111"/>
+      <circle cx="108" cy="65" r="4" fill="#111"/>
+
+      <ellipse cx="100" cy="78" rx="6" ry="4" fill="#333"/>
+
+      <rect x="70" y="145" width="8" height="30" fill="#111"/>
+      <rect x="90" y="145" width="8" height="30" fill="#111"/>
+      <rect x="110" y="145" width="8" height="30" fill="#111"/>
+      <rect x="130" y="145" width="8" height="30" fill="#111"/>
+
+      <circle cx="150" cy="115" r="6" fill="#f2f2f2"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family: 'Cairo', sans-serif;">عيد أضحى مبارك </h2>
+    <div class="inputBox">
+      <span>👤</span>
+      <input type="text" id="nameInput" placeholder=" أدخل إسمك ثنائي ">
+    </div>
+  
+  
+  <div class="genderBox">
+
+  <label class="genderBtn">
+    <input type="radio" name="gender" value="boy" checked>
+    <div class="iconBox boy">
+      <i class="fa-solid fa-child"></i>
+    </div>
+    <span>ولد</span>
+  </label>
+
+  <label class="genderBtn">
+    <input type="radio" name="gender" value="girl">
+    <div class="iconBox girl">
+      <i class="fa-solid fa-child-dress"></i>
+    </div>
+    <span>بنت</span>
+  </label>
+
+</div>
+  
+  
+  
+      <button onclick="start()" style="font-family: 'Cairo', sans-serif;">مفاجأة</button>
+  </div>
+  
+ <!-- ==== كود عداد زوار الموقع - يتحط قبل </body> ==== -->
+
+<!-- 1) أيقونة العين والعداد - غيّر مكانها بالـ CSS تحت -->
+<div id="visitor-counter-box" style="
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-family: sans-serif;
+  font-size: 14px;
+  z-index: 9999;
+  direction: ltr;
+">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+  <span id="visitor-count">...</span>
+</div>
+
+  <!-- =========================================================
+     نظام التعليقات - انسخ الأجزاء الثلاثة في أماكنها المطلوبة
+     ========================================================= -->
+
+<!-- ============ الجزء 1: أيقونة التعليقات ============
+     حطها جنب أيقونة العين (نفس المكان اللي فيه visitor-counter-box) -->
+
+<div id="comments-icon-box" style="
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span id="comments-badge" style="
+    display: none;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+  ">0</span>
+</div>
+
+<!-- ============ الجزء 2: نافذة التعليقات ============
+     حطها في أي مكان في الـ body (قبل الـ script مثلاً) -->
+
+<div id="comments-modal" style="
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 30, 0.85);
+  z-index: 10000;
+  align-items: flex-end;
+  justify-content: center;
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+">
+  <div style="
+    background: linear-gradient(180deg, #2b3868 0%, #232a52 100%);
+    width: 100%;
+    max-width: 480px;
+    height: 85vh;
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+  ">
+
+    <!-- رأس النافذة -->
+    <div style="
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    ">
+      <h3 style="color:#fff; margin:0; font-size:18px;">التعليقات</h3>
+      <button onclick="closeComments()" style="
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+      ">✕</button>
+    </div>
+
+    <!-- قائمة التعليقات -->
+    <div id="comments-list" style="
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    ">
+      <p style="color:#9aa3c7; text-align:center; margin-top:20px;">جاري تحميل التعليقات...</p>
+    </div>
+
+    <!-- صندوق الكتابة -->
+    <div style="
+      padding: 14px 20px 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.15);
+    ">
+      <div id="name-row" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <input id="commenter-name" type="text" placeholder="اسمك"
+          style="
+            flex:1;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color:#fff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+          ">
+        <label style="color:#9aa3c7; font-size:12px; display:flex; align-items:center; gap:4px; white-space:nowrap;">
+          <input type="checkbox" id="anon-check" onchange="toggleAnon()">
+          مجهول
+        </label>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <input id="comment-text" type="text" placeholder="اكتب تعليقك..."
+          style="
+            flex:1;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color:#fff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+          ">
+        <button onclick="submitComment()" style="
+          background: linear-gradient(90deg,#5b6ef5,#7b5bf5);
+          border:none;
+          color:#fff;
+          width: 44px;
+          border-radius: 12px;
+          cursor:pointer;
+          font-size: 16px;
+        ">➤</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
           
   
 
